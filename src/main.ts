@@ -8,6 +8,10 @@ window.addEventListener("DOMContentLoaded", () => {
     setEditorSize();
 });
 
+window.onresize = function(event) {
+    setEditorSize();
+};
+
 function resizeExplorer(): void {
     // resize explorer then reset the editor's size: WIP
 
