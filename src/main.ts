@@ -17,15 +17,15 @@ window.onresize = function(event) {
 function resizeExplorer(): void {
     // resize explorer then reset the editor's size: WIP
 
-    setEditorSize(); 
+    setEditorSize()
 }
 
 
 function setEditorSize(): void {
-    let explorerWidth: Number = explorer.offsetWidth
-    let toolbarWidth: Number = toolbar.offsetWidth
+    let explorerWidth: number = explorer.offsetWidth
+    let toolbarWidth: number= toolbar.offsetWidth
 
-    let offset: Number = +explorerWidth + +toolbarWidth
+    let offset: number = explorerWidth + toolbarWidth
 
     editor.style.width = (document.body.clientWidth - +offset).toString() + "px"
 }
