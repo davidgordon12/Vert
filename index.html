@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vert</title>
     <script type="module" src="/src/main.ts" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   </head>
   <body>
     <div class="row">
@@ -16,12 +18,13 @@
       </div>
 
       <div id="explorer" class="column explorer">
-        <ul>
-            <li>file</li>
-            <li>file</li>
-            <li>file</li>
-            <li>file</li>
-            <li>file</li>
+        <ul id="explorer-file-tree" class="explorer-file-tree">
+            <li id="explorer-file-tree-element" class="explorer-file-tree-element">file</li>
+            <li id="explorer-file-tree-element" class="explorer-file-tree-element">file</li>
+            <li id="explorer-file-tree-element" class="explorer-file-tree-element">file</li>
+            <li id="explorer-file-tree-element" class="explorer-file-tree-element">file</li>
+            <li id="explorer-file-tree-element" class="explorer-file-tree-element">file</li>
+            <li id="explorer-file-tree-element" class="explorer-file-tree-element">file</li>
         </ul>
       </div>
 
@@ -33,6 +36,7 @@
       </div>
 
       <div class="terminal"></div>
+      <div class="statusline"></div>
     </div>
   </body>
 </html>
