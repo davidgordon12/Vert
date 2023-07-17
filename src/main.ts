@@ -15,6 +15,10 @@ let toolbarExplorer: HTMLButtonElement = document.getElementById(
   "toolbar-explorer"
 ) as HTMLButtonElement;
 
+let openFolder: HTMLButtonElement = document.getElementById(
+    "read-dir"
+) as HTMLButtonElement;
+
 interact(explorer).resizable({
   edges: { top: false, left: true, bottom: false, right: false },
   listeners: {
@@ -44,6 +48,7 @@ window.addEventListener("DOMContentLoaded", () => {
 window.onresize = function (event) {
   setEditorSize();
 };
+
 function setEditorSize(): void {
   let explorerWidth: number = explorer.offsetWidth;
   let toolbarWidth: number = toolbar.offsetWidth;
@@ -62,3 +67,7 @@ toolbarExplorer.onclick = () => {
 
   setEditorSize();
 };
+
+openFolder.onclick = async () => {
+    invoke('get_workspace');
+}
