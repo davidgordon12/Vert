@@ -29,6 +29,10 @@ let fileTree: HTMLUListElement = document.getElementById(
     "explorer-file-tree"
 ) as HTMLUListElement
 
+export interface DirectoryContent {
+    [key: string]: [string, string]; // Key will be either "Directory" or "File"
+}
+
 interact(explorer).resizable({
   edges: { top: false, left: true, bottom: false, right: false },
   listeners: {
@@ -85,35 +89,24 @@ openFolder.onclick = async () => {
         defaultPath: await homeDir(),
     }) as string;
 
-    const entries = await readDir(selected, { dir: undefined, recursive: true });
-    current_dir = selected;
-    
-    fileTree.innerHTML = "";
-    processEntries(entries)
-}
+    let files: Array<DirectoryContent> = await invoke('open_directory', { path: selected })
 
-function processEntries(entries: Array<FileEntry>) {
-      for (const entry of entries) {
+    files.forEach(file => {
         const element = document.createElement("li");
         element.id = "explorer-file-tree-element"
         element.classList.add('explorer-file-tree-element');
-        if(entry.children) {
-            element.innerText = "> " + entry.name as string;
+        if(file.children) {
+            element.innerText = "> " + file.File[0] as string;
             element.classList.add('folder');
         }
         else {
-            element.innerText = entry.name as string;
+            element.innerText = file.File[0] as string;
             element.classList.add('file');
         }
-        fileTree.appendChild(element);
 
         element.onclick = async () => {
-            if(element.classList.contains('file')) {
-                editor.innerText = await readTextFile(current_dir + '/' + element.innerText)
-            }
-            if(element.classList.contains('folder')) {
-               console.log("folder clicked");
-            }
+            
         }
-      }
-    } 
+        fileTree.appendChild(element);
+    });
+}
