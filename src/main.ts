@@ -19,6 +19,10 @@ let openFolder: HTMLButtonElement = document.getElementById(
     "read-dir"
 ) as HTMLButtonElement;
 
+let fileTree: HTMLUListElement = document.getElementById(
+    "explorer-file-tree"
+) as HTMLUListElement
+
 interact(explorer).resizable({
   edges: { top: false, left: true, bottom: false, right: false },
   listeners: {
@@ -69,5 +73,12 @@ toolbarExplorer.onclick = () => {
 };
 
 openFolder.onclick = async () => {
-    invoke('get_workspace');
+    let files: Array<string> = await invoke('get_workspace');
+    
+    for(let i = 0; i < files.length; i++) {
+        const element = document.createElement("li");
+        element.classList.add('explorer-file-tree-element');
+        element.innerText = files[i];
+        fileTree.appendChild(element);
+    }
 }
