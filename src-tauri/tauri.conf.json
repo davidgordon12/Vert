@@ -12,7 +12,10 @@
   },
   "tauri": {
     "allowlist": {
-      "all": false,
+      "os": {
+        "all": true
+      },
+      "all": true,
       "shell": {
         "all": true,
         "open": true
@@ -28,7 +31,7 @@
         "removeFile": true,
         "renameFile": true,
         "exists": true,
-        "scope": ["**"]
+        "scope": ["**", "**/*", "/**/*", ".", ".*"]
       },
       "dialog": {
         "all": true,

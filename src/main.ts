@@ -1,5 +1,11 @@
-import { invoke } from "@tauri-apps/api/tauri";
 import interact from "interactjs";
+
+var current_dir: string = "";
+
+import { invoke } from "@tauri-apps/api/tauri";
+import { FileEntry, readDir, readTextFile } from '@tauri-apps/api/fs';
+import { dirname, homeDir } from '@tauri-apps/api/path';
+import { open } from '@tauri-apps/api/dialog';
 
 let editor: HTMLTextAreaElement = document.getElementById(
   "editor-textarea"
@@ -26,7 +32,7 @@ let fileTree: HTMLUListElement = document.getElementById(
 interact(explorer).resizable({
   edges: { top: false, left: true, bottom: false, right: false },
   listeners: {
-    move: function (event) {
+    move: function (event: any) {
       let { x, y } = event.target.dataset;
 
       x = (parseFloat(x) || 0) + event.deltaRect.left;
@@ -49,7 +55,7 @@ window.addEventListener("DOMContentLoaded", () => {
   setEditorSize();
 });
 
-window.onresize = function (event) {
+window.onresize = function () {
   setEditorSize();
 };
 
@@ -73,12 +79,41 @@ toolbarExplorer.onclick = () => {
 };
 
 openFolder.onclick = async () => {
-    let files: Array<string> = await invoke('get_workspace');
+    const selected = await open({
+        directory: true,
+        multiple: false,
+        defaultPath: await homeDir(),
+    }) as string;
+
+    const entries = await readDir(selected, { dir: undefined, recursive: true });
+    current_dir = selected;
     
-    for(let i = 0; i < files.length; i++) {
-        const element = document.createElement("li");
-        element.classList.add('explorer-file-tree-element');
-        element.innerText = files[i];
-        fileTree.appendChild(element);
-    }
+    fileTree.innerHTML = "";
+    processEntries(entries)
 }
+
+function processEntries(entries: Array<FileEntry>) {
+      for (const entry of entries) {
+        const element = document.createElement("li");
+        element.id = "explorer-file-tree-element"
+        element.classList.add('explorer-file-tree-element');
+        if(entry.children) {
+            element.innerText = "> " + entry.name as string;
+            element.classList.add('folder');
+        }
+        else {
+            element.innerText = entry.name as string;
+            element.classList.add('file');
+        }
+        fileTree.appendChild(element);
+
+        element.onclick = async () => {
+            if(element.classList.contains('file')) {
+                editor.innerText = await readTextFile(current_dir + '/' + element.innerText)
+            }
+            if(element.classList.contains('folder')) {
+               console.log("folder clicked");
+            }
+        }
+      }
+    } 
