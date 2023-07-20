@@ -2,13 +2,14 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod explorer;
-use crate::explorer::read_directory;
+use crate::explorer::*;
 
 #[tokio::main]
 async fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
-            read_directory
+            read_directory,
+            read_entry,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

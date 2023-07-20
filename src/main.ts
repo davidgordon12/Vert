@@ -1,10 +1,7 @@
 import interact from "interactjs";
 
-var current_dir: string = "";
-
 import { invoke } from "@tauri-apps/api/tauri";
-import { FileEntry, readDir, readTextFile } from '@tauri-apps/api/fs';
-import { dirname, homeDir } from '@tauri-apps/api/path';
+import { homeDir } from '@tauri-apps/api/path';
 import { open } from '@tauri-apps/api/dialog';
 
 let editor: HTMLTextAreaElement = document.getElementById(
@@ -22,15 +19,15 @@ let toolbarExplorer: HTMLButtonElement = document.getElementById(
 ) as HTMLButtonElement;
 
 let openFolder: HTMLButtonElement = document.getElementById(
-    "read-dir"
+  "read-dir"
 ) as HTMLButtonElement;
 
 let fileTree: HTMLUListElement = document.getElementById(
-    "explorer-file-tree"
+  "explorer-file-tree"
 ) as HTMLUListElement
 
 export interface DirectoryContent {
-    [key: string]: [string, string]; // Key will be either "Directory" or "File"
+  [key: string]: [string, string]; // Key will be either "Directory" or "File"
 }
 
 interact(explorer).resizable({
@@ -83,24 +80,26 @@ toolbarExplorer.onclick = () => {
 };
 
 openFolder.onclick = async () => {
-    const selected = await open({
-        directory: true,
-        multiple: false,
-        defaultPath: await homeDir(),
-    }) as string;
+  const selected = await open({
+    directory: true,
+    multiple: false,
+    defaultPath: await homeDir(),
+  }) as string;
 
-    let files: Array<string> = await invoke('read_directory', { path: selected })
+  let files: Array<string> = await invoke('read_directory', { path: selected })
 
-    files.forEach(file => {
-        console.log(file)
-        const element = document.createElement("li");
-        element.id = file
-        element.classList.add('explorer-file-tree-element');
-        element.innerText = file;
-        element.onclick = async () => {
-            
-        }
-        fileTree.appendChild(element);
-    });
-    
+  files.forEach(file => {
+    const element = document.createElement("li");
+    element.id = file
+    element.classList.add('explorer-file-tree-element');
+    element.innerText = file.substring(file.lastIndexOf('/') + 1);
+    element.onclick = async () => {
+      let file_content: string = await invoke('read_entry', { path: element.id })
+      if (file_content != "") {
+        editor.innerText = file_content;
+      }
+    }
+    fileTree.appendChild(element);
+  });
+
 }
