@@ -1,5 +1,6 @@
-use std::fs::read_dir;
+use std::fs::*;
 use serde::{Serialize, Deserialize};
+use tauri::api::file;
 
 #[derive(Serialize, Deserialize, Clone)]
 pub enum DirectoryChild {
@@ -32,4 +33,16 @@ pub fn open_directory(path: String) -> Vec<DirectoryChild> {
     }
 
     dir_children
+}
+
+#[tauri::command]
+pub fn read_entry(path: String) -> Result<String, Vec<DirectoryChild>> {
+    let metadata = metadata(&path).unwrap();
+    let file_type = metadata.file_type();
+
+    if file_type.is_dir() {
+        return Err(open_directory(path))
+    }
+
+    Ok(read_to_string(path).unwrap())
 }

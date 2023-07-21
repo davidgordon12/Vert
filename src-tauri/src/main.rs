@@ -9,6 +9,7 @@ async fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             open_directory,
+            read_entry,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
