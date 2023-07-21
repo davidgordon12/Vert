@@ -8,8 +8,7 @@ use crate::explorer::*;
 async fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
-            read_directory,
-            read_entry,
+            open_directory,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
