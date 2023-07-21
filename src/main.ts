@@ -4,6 +4,8 @@ import { invoke } from "@tauri-apps/api/tauri";
 import { homeDir } from '@tauri-apps/api/path';
 import { open } from '@tauri-apps/api/dialog';
 
+import { DirectoryEntry } from "./types";
+
 let editor: HTMLTextAreaElement = document.getElementById(
   "editor-textarea"
 ) as HTMLTextAreaElement;
@@ -86,20 +88,43 @@ openFolder.onclick = async () => {
     defaultPath: await homeDir(),
   }) as string;
 
-  /*let files: Array<string> = */console.log(await invoke('open_directory', { path: selected }))
+  let files: Array<DirectoryContent> = await invoke('open_directory', { path: selected })
 
-  /*files.forEach(file => {
-    const element = document.createElement("li");
-    element.id = file
-    element.classList.add('explorer-file-tree-element');
-    element.innerText = file.substring(file.lastIndexOf('/') + 1);
-    element.onclick = async () => {
-      let file_content: string = await invoke('read_entry', { path: element.id })
-      if (file_content != "") {
-        editor.innerText = file_content;
-      }
-    }
-    fileTree.appendChild(element);
-  });
-*/
+  processEntries(files);
+}
+
+function processEntries(files: Array<DirectoryEntry>) {
+    files.forEach(file => {
+        const element = document.createElement("li");
+        element.id = Object.entries(file)[0][1][1];
+        element.classList.add('explorer-file-tree-element');
+        element.classList.add(Object.entries(file)[0][0][0]); // appends a D (directory) or F (file) to classList
+        if(Object.entries(file)[0][0][0] == 'D') {
+            element.innerText = '>' + Object.entries(file)[0][1][0];
+        }
+        else {
+            element.innerText = Object.entries(file)[0][1][0];
+        }
+    
+        element.onclick = async () => {
+            if(element.classList.contains('D')) {
+                if(element.classList.contains("processed")) { return; } // folder has already been opened, **WIP. this should collapse parent folder **
+                else {
+                    element.classList.add("processed");
+                    let sub_files: Array<DirectoryEntry> = await invoke('open_directory', { path: element.id})
+                    processEntries(sub_files);
+                }
+            }
+            else {
+                let res = await invoke('read_entry', { path: element.id } );
+    
+                if(res != null) {
+                    editor.innerText = res.toString();
+                }
+            }
+            
+        }
+    
+        fileTree.appendChild(element);
+      });
 }
