@@ -86,9 +86,9 @@ openFolder.onclick = async () => {
     defaultPath: await homeDir(),
   }) as string;
 
-  let files: Array<string> = await invoke('read_directory', { path: selected })
+  /*let files: Array<string> = */console.log(await invoke('open_directory', { path: selected }))
 
-  files.forEach(file => {
+  /*files.forEach(file => {
     const element = document.createElement("li");
     element.id = file
     element.classList.add('explorer-file-tree-element');
@@ -101,5 +101,5 @@ openFolder.onclick = async () => {
     }
     fileTree.appendChild(element);
   });
-
+*/
 }
