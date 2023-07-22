@@ -81,7 +81,8 @@ toolbarExplorer.onclick = () => {
   setEditorSize();
 };
 
-openFolder.onclick = async () => {
+openFolder.onclick = async (e: any) => {
+    explorer
   const selected = await open({
     directory: true,
     multiple: false,
@@ -90,15 +91,32 @@ openFolder.onclick = async () => {
 
   let files: Array<DirectoryContent> = await invoke('open_directory', { path: selected })
 
-  processEntries(files);
+  processEntries(files, false, "");
 }
 
-function processEntries(files: Array<DirectoryEntry>) {
+function processEntries(files: Array<DirectoryEntry>, expanded: boolean, parent: string) {
+    console.log(parent)
+    let tree: Array<DirectoryEntry> = []
     files.forEach(file => {
+        if(Object.entries(file)[0][0][0] == 'D') {
+            tree.push(file)
+        }
+    })
+
+    files.forEach(file => {
+        if(Object.entries(file)[0][0][0] == 'F') {
+            tree.push(file)
+        }
+    })
+
+    tree.forEach(file => {
         const element = document.createElement("li");
         element.id = Object.entries(file)[0][1][1];
         element.classList.add('explorer-file-tree-element');
         element.classList.add(Object.entries(file)[0][0][0]); // appends a D (directory) or F (file) to classList
+        if(expanded) {
+            element.classList.add(parent);
+        }
         if(Object.entries(file)[0][0][0] == 'D') {
             element.innerText = '>' + Object.entries(file)[0][1][0];
         }
@@ -107,12 +125,22 @@ function processEntries(files: Array<DirectoryEntry>) {
         }
     
         element.onclick = async () => {
+            console.log(parent)
             if(element.classList.contains('D')) {
-                if(element.classList.contains("processed")) { return; } // folder has already been opened, **WIP. this should collapse parent folder **
+                if(element.classList.contains("expanded")) {
+                    // find each element with className of parent folder and hide it
+                    let entries: any = document.getElementById("explorer-file-tree")?.getElementsByTagName('li');
+                    for(var i = 0; i < entries.length; ++i) {
+                        if(entries[i].classList.contains(parent)) {
+                            entries[i].remove();
+                        }
+                    }
+                    element.classList.remove("expanded");
+                } 
                 else {
-                    element.classList.add("processed");
+                    element.classList.add("expanded");
                     let sub_files: Array<DirectoryEntry> = await invoke('open_directory', { path: element.id})
-                    processEntries(sub_files);
+                    processEntries(sub_files, true, element.innerText);
                 }
             }
             else {

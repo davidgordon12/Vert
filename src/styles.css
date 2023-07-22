@@ -58,6 +58,7 @@ textarea:active {
     background-color: blueviolet;
     position: absolute;
     right: 50px;
+    overflow-x: hidden;
 
     touch-action: none; /* STOPS BROWSER FROM PANNING WHEN DRAGING ON TOUCHSCREEN DEVICES */
     box-sizing: border-box; /* THIS IS ESSENTIAL FOR DRAG/RESIZE FUNCTIONALITY */
@@ -67,11 +68,13 @@ textarea:active {
     text-decoration: none;
     list-style-type: none;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    font-size: 13px;
+    font-size: 14px;
     margin: 0 0 0 0;
     padding: 16px 0 0 16px;
-    overflow: hidden;
+    overflow-x: hidden;
     white-space: nowrap;
+    scroll-behavior: auto;
+    scrollbar-color: pink;
 }
 
 .explorer-file-tree-element {
