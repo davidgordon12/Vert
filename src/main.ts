@@ -3,8 +3,7 @@ import interact from "interactjs";
 import { invoke } from "@tauri-apps/api/tauri";
 import { homeDir } from '@tauri-apps/api/path';
 import { open } from '@tauri-apps/api/dialog';
-
-import { DirectoryEntry } from "./types";
+import openDirectory from "./ipc";
 
 let editor: HTMLTextAreaElement = document.getElementById(
   "editor-textarea"
@@ -81,22 +80,21 @@ toolbarExplorer.onclick = () => {
   setEditorSize();
 };
 
-openFolder.onclick = async (e: any) => {
-    explorer
+openFolder.onclick = async () => {
   const selected = await open({
     directory: true,
     multiple: false,
     defaultPath: await homeDir(),
   }) as string;
 
-  let files: Array<DirectoryContent> = await invoke('open_directory', { path: selected })
+  let files: Array<DirectoryContent> = await openDirectory(selected);
 
   processEntries(files, false, "");
 }
 
-function processEntries(files: Array<DirectoryEntry>, expanded: boolean, parent: string) {
+function processEntries(files: Array<DirectoryContent>, expanded: boolean, parent: string) {
     console.log(parent)
-    let tree: Array<DirectoryEntry> = []
+    let tree: Array<DirectoryContent> = []
     files.forEach(file => {
         if(Object.entries(file)[0][0][0] == 'D') {
             tree.push(file)
@@ -139,7 +137,7 @@ function processEntries(files: Array<DirectoryEntry>, expanded: boolean, parent:
                 } 
                 else {
                     element.classList.add("expanded");
-                    let sub_files: Array<DirectoryEntry> = await invoke('open_directory', { path: element.id})
+                    let sub_files: Array<DirectoryContent> = await invoke('open_directory', { path: element.id})
                     processEntries(sub_files, true, element.innerText);
                 }
             }
