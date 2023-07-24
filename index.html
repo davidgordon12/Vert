@@ -6,29 +6,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vert</title>
     <script type="module" src="/src/main.ts" defer></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   </head>
   <body>
     <div class="row">
       <div class="tabs"></div>
 
       <div id="editor" class="column editor">
-        <textarea id="editor-textarea" class="editor-textarea"></textarea>
+        <textarea id="editorTextarea" class="editor-textarea">
+          
+        </textarea>
       </div>
 
       <div id="explorer" class="column explorer">
-        <button id="read-dir">Open Folder</button>
-        <ul id="explorer-file-tree" class="explorer-file-tree">
-            
+        <button id="openFolder">Open Folder</button>
+        <ul id="explorerFileTree" class="explorer-file-tree">
+
         </ul>
       </div>
-
-      <div id="toolbar" class="column toolbar">
-        <button id="toolbar-explorer" class="toolbar-explorer"></button>
-        <button class="toolbar-search"></button>
-        <button class="toolbar-git"></button>
-        <button class="toolbar-extensions"></button>
+      
+      <div id="toolbox" class="column toolbar">
+        <button id="toolboxExplorer" class="toolbar-explorer"></button>
+        <button class="toolboxSearch"></button>
+        <button class="toolboxGit"></button>
+        <button class="toolboxExtensions"></button>
       </div>
 
       <div class="terminal"></div>
