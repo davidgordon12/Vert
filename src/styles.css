@@ -35,11 +35,11 @@ textarea {
     margin: 0 0 0 0;
     border: none;
     font-size: 16px;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif'Space Mono', monospace;
     font-weight: 400;
     height: 100%;
     font-size: 20px;
     resize: none;
+    white-space: nowrap;
 }
 
 textarea:focus {

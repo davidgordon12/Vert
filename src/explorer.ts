@@ -96,7 +96,7 @@ function processEntries(files: Array<DirectoryContent>, expanded: boolean) {
                 let res: string = await readEntry(element.id);
     
                 if(res != null) {
-                    editor.innerText = res.toString();
+                    editorTextarea.innerText = res.toString();
                 }
             }
             
