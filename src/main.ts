@@ -1,9 +1,12 @@
 import interact from "interactjs";
 
-import { invoke } from "@tauri-apps/api/tauri";
 import { homeDir } from '@tauri-apps/api/path';
 import { open } from '@tauri-apps/api/dialog';
-import openDirectory from "./ipc";
+import { openDirectory, readEntry } from "./ipc";
+import { DirectoryContent } from "./types";
+import { E } from "@tauri-apps/api/path-c062430b";
+
+let pxa: string = "";
 
 let editor: HTMLTextAreaElement = document.getElementById(
   "editor-textarea"
@@ -26,10 +29,6 @@ let openFolder: HTMLButtonElement = document.getElementById(
 let fileTree: HTMLUListElement = document.getElementById(
   "explorer-file-tree"
 ) as HTMLUListElement
-
-export interface DirectoryContent {
-  [key: string]: [string, string]; // Key will be either "Directory" or "File"
-}
 
 interact(explorer).resizable({
   edges: { top: false, left: true, bottom: false, right: false },
@@ -87,13 +86,17 @@ openFolder.onclick = async () => {
     defaultPath: await homeDir(),
   }) as string;
 
+  let oldWorkspace = document.getElementsByTagName('li');
+  for(let i = oldWorkspace.length-1; i >= 0; --i) {
+    oldWorkspace[i].remove()
+  }
+
   let files: Array<DirectoryContent> = await openDirectory(selected);
 
-  processEntries(files, false, "");
+  processEntries(files, false);
 }
 
-function processEntries(files: Array<DirectoryContent>, expanded: boolean, parent: string) {
-    console.log(parent)
+function processEntries(files: Array<DirectoryContent>, expanded: boolean) {
     let tree: Array<DirectoryContent> = []
     files.forEach(file => {
         if(Object.entries(file)[0][0][0] == 'D') {
@@ -113,7 +116,7 @@ function processEntries(files: Array<DirectoryContent>, expanded: boolean, paren
         element.classList.add('explorer-file-tree-element');
         element.classList.add(Object.entries(file)[0][0][0]); // appends a D (directory) or F (file) to classList
         if(expanded) {
-            element.classList.add(parent);
+            element.classList.add(pxa);
         }
         if(Object.entries(file)[0][0][0] == 'D') {
             element.innerText = '>' + Object.entries(file)[0][1][0];
@@ -123,26 +126,24 @@ function processEntries(files: Array<DirectoryContent>, expanded: boolean, paren
         }
     
         element.onclick = async () => {
-            console.log(parent)
             if(element.classList.contains('D')) {
+                pxa = element.innerText;
                 if(element.classList.contains("expanded")) {
-                    // find each element with className of parent folder and hide it
-                    let entries: any = document.getElementById("explorer-file-tree")?.getElementsByTagName('li');
-                    for(var i = 0; i < entries.length; ++i) {
-                        if(entries[i].classList.contains(parent)) {
-                            entries[i].remove();
-                        }
+                    let elements = document.getElementsByClassName(pxa);
+                    for(let i = elements.length - 1; i >= 0; i--) {
+                      elements[i].remove()
                     }
                     element.classList.remove("expanded");
                 } 
                 else {
                     element.classList.add("expanded");
-                    let sub_files: Array<DirectoryContent> = await invoke('open_directory', { path: element.id})
-                    processEntries(sub_files, true, element.innerText);
+                    let sub_files: Array<DirectoryContent> = await openDirectory(element.id);
+                    console.log(element.innerText)
+                    processEntries(sub_files, true);
                 }
             }
             else {
-                let res = await invoke('read_entry', { path: element.id } );
+                let res: string = await readEntry(element.id);
     
                 if(res != null) {
                     editor.innerText = res.toString();
