@@ -1,6 +1,6 @@
 # Vert - A Rusty Text Editor
 
-# Vert is a BLAZINGLY FAST text-editor built using Rust and TypeScript (via Tauri), designed to be easy to use, without much configuration. This public repo is where all development takes place. It also contains Roadmaps, Issues, Project board and the Wiki.
+Vert is a BLAZINGLY FAST text-editor built using Rust and TypeScript (via Tauri), designed to be easy to use, without much configuration. This public repo is where all development takes place. It also contains Roadmaps, Issues, Project board and the Wiki.
 
 ## Features (WIP)
 
