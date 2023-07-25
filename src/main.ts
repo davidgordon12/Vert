@@ -1,8 +1,8 @@
-import { setEditorSize } from "./editor";
+import { setEditorSize } from "./components/editor";
 
-import "./toolbox"
-import "./editor"
-import "./explorer"
+import "./components/toolbox"
+import "./components/editor"
+import "./components/explorer"
 
 window.addEventListener("DOMContentLoaded", () => {
   setEditorSize();

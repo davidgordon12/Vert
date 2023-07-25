@@ -1,8 +1,8 @@
 import interact from "interactjs";
 import { homeDir } from '@tauri-apps/api/path';
 import { open } from '@tauri-apps/api/dialog';
-import { openDirectory, readEntry } from "./ipc";
-import { DirectoryContent } from "./types";
+import { openDirectory, readEntry } from "../ipc";
+import { DirectoryContent } from "../types";
 import { setEditorSize } from "./editor";
 
 let selectedDir: string = "";
