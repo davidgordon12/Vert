@@ -26,4 +26,4 @@ Instructions on building Vert from source can be found <a href="https://github.c
 
 ## License 
 
-Vert is open-source software licensed under the GNU 2.0 License. Feel free to use, modify, and distribute it in accordance with the terms specified in the license.
+Vert is open-source software licensed under the <a href="https://github.com/davidgordon12/Vert/edit/master/LICENCE">GNU General Public Licence 2.0</a> License. Feel free to use, modify, and distribute it in accordance with the terms specified in the license.
