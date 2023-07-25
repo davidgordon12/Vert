@@ -20,6 +20,10 @@ We welcome contributions from the community to make Vert even better. If you enc
 - <a href=""> Give us a suggestion </a>
 - <a href=""> Read source-code changes or pull-requests </a>
 
+## Building 
+
+Instructions on building Vert from source can be found <a href="https://github.com/davidgordon12/Vert/wiki/Build-Vert-from-source">here</a>.
+
 ## License 
 
 Vert is open-source software licensed under the GNU 2.0 License. Feel free to use, modify, and distribute it in accordance with the terms specified in the license.
