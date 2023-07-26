@@ -88,7 +88,6 @@ function processEntries(files: Array<DirectoryContent>, expanded: boolean) {
                 else {
                     element.classList.add("expanded");
                     let sub_files: Array<DirectoryContent> = await openDirectory(element.id);
-                    console.log(element.innerText)
                     processEntries(sub_files, true);
                 }
             }
@@ -96,6 +95,7 @@ function processEntries(files: Array<DirectoryContent>, expanded: boolean) {
                 let res: string = await readEntry(element.id);
     
                 if(res != null) {
+                    editorTextarea.innerText = "";
                     editorTextarea.innerText = res.toString();
                 }
             }
