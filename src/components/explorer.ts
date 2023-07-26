@@ -5,8 +5,6 @@ import { openDirectory, readEntry } from "../ipc";
 import { DirectoryContent } from "../types";
 import { setEditorSize } from "./editor";
 
-let selectedDir: string = "";
-
 interact(explorer).resizable({
   edges: { top: false, left: true, bottom: false, right: false },
   listeners: {
@@ -47,4 +45,16 @@ openFolderBtn.onclick = async () => {
 }
 
 function processEntries(files: Array<DirectoryContent>) {
+    // WIP: Use a B-Tree
+    files.forEach(f => {
+       let element = document.createElement('li');
+       element.innerText = Object.entries(f)[0][1][0];
+       explorerFileTree.appendChild (element);
+
+       element.onclick = async () => {
+            // innerHTML is used over innerText due to formatting errors with the ladder. 
+            // this is not a concern in our circumstance
+            editorTextarea.innerHTML = await readEntry(Object.entries(f)[0][1][1]);
+       }
+    });
 }
