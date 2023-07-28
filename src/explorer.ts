@@ -1,9 +1,11 @@
 import interact from "interactjs";
 import { homeDir } from '@tauri-apps/api/path';
 import { open } from '@tauri-apps/api/dialog';
-import { openDirectory, readEntry } from "../ipc";
-import { DirectoryContent } from "../types";
-import { setEditorSize } from "./editor";
+import { openDirectory, readEntry } from "./ipc";
+import { DirectoryContent } from "./types";
+import { setEditorSize } from "./components/editor";
+
+let selectedDir: string = "";
 
 interact(explorer).resizable({
   edges: { top: false, left: true, bottom: false, right: false },
@@ -28,6 +30,7 @@ interact(explorer).resizable({
 });
 
 openFolderBtn.onclick = async () => {
+  console.log("dasdas ")
   const selected = await open({
     directory: true,
     multiple: false,
@@ -40,11 +43,13 @@ openFolderBtn.onclick = async () => {
   }
 
   let files: Array<DirectoryContent> = await openDirectory(selected);
+  console.log(files);
 
-  processEntries(files);
+  processEntries(files, false);
 }
 
 function processEntries(files: Array<DirectoryContent>, expanded: boolean) {
+  console.log(files)
     let tree: Array<DirectoryContent> = []
     files.forEach(file => {
         if(Object.entries(file)[0][0][0] == 'D') {
@@ -86,6 +91,7 @@ function processEntries(files: Array<DirectoryContent>, expanded: boolean) {
                 else {
                     element.classList.add("expanded");
                     let sub_files: Array<DirectoryContent> = await openDirectory(element.id);
+                    console.log(element.innerText)
                     processEntries(sub_files, true);
                 }
             }
@@ -93,8 +99,7 @@ function processEntries(files: Array<DirectoryContent>, expanded: boolean) {
                 let res: string = await readEntry(element.id);
     
                 if(res != null) {
-                    editorTextarea.innerHTML = "";
-                    editorTextarea.innerHTML = res.toString();
+                    editorTextarea.innerText = res.toString();
                 }
             }
             
@@ -102,3 +107,4 @@ function processEntries(files: Array<DirectoryContent>, expanded: boolean) {
     
         explorerFileTree.appendChild(element);
       });
+}
