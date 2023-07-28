@@ -44,17 +44,61 @@ openFolderBtn.onclick = async () => {
   processEntries(files);
 }
 
-function processEntries(files: Array<DirectoryContent>) {
-    // WIP: Use a B-Tree
-    files.forEach(f => {
-       let element = document.createElement('li');
-       element.innerText = Object.entries(f)[0][1][0];
-       explorerFileTree.appendChild (element);
+function processEntries(files: Array<DirectoryContent>, expanded: boolean) {
+    let tree: Array<DirectoryContent> = []
+    files.forEach(file => {
+        if(Object.entries(file)[0][0][0] == 'D') {
+            tree.push(file)
+        }
+    })
 
-       element.onclick = async () => {
-            // innerHTML is used over innerText due to formatting errors with the ladder. 
-            // this is not a concern in our circumstance
-            editorTextarea.innerHTML = await readEntry(Object.entries(f)[0][1][1]);
-       }
-    });
-}
+    files.forEach(file => {
+        if(Object.entries(file)[0][0][0] == 'F') {
+            tree.push(file)
+        }
+    })
+
+    tree.forEach(file => {
+        const element = document.createElement("li");
+        element.id = Object.entries(file)[0][1][1];
+        element.classList.add('explorer-file-tree-element');
+        element.classList.add(Object.entries(file)[0][0][0]); // appends a D (directory) or F (file) to classList
+        if(expanded) {
+            element.classList.add(selectedDir);
+        }
+        if(Object.entries(file)[0][0][0] == 'D') {
+            element.innerText = '>' + Object.entries(file)[0][1][0];
+        }
+        else {
+            element.innerText = Object.entries(file)[0][1][0];
+        }
+    
+        element.onclick = async () => {
+            if(element.classList.contains('D')) {
+                selectedDir = element.innerText;
+                if(element.classList.contains("expanded")) {
+                    let elements = document.getElementsByClassName(selectedDir);
+                    for(let i = elements.length - 1; i >= 0; i--) {
+                      elements[i].remove()
+                    }
+                    element.classList.remove("expanded");
+                } 
+                else {
+                    element.classList.add("expanded");
+                    let sub_files: Array<DirectoryContent> = await openDirectory(element.id);
+                    processEntries(sub_files, true);
+                }
+            }
+            else {
+                let res: string = await readEntry(element.id);
+    
+                if(res != null) {
+                    editorTextarea.innerHTML = "";
+                    editorTextarea.innerHTML = res.toString();
+                }
+            }
+            
+        }
+    
+        explorerFileTree.appendChild(element);
+      });
