@@ -1,10 +1,9 @@
-import { DirectoryContent } from "./types";
 import { invoke } from "@tauri-apps/api/tauri"
 
-export async function openDirectory(path: string): Promise<Array<DirectoryContent>> {
-    return await invoke('open_directory', { path: path })
+export async function openWorkspace(path: string): Promise<Array<String>> {
+    return await invoke('open_workspace', { path: path })
 }
 
-export async function readEntry(path: String): Promise<string> {
-    return await invoke('read_entry', { path: path } )
+export async function readFile(path: String): Promise<string> {
+    return await invoke('read_file', { path: path } )
 }
