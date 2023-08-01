@@ -1,8 +1,8 @@
 #[derive(serde::Serialize)]
 pub struct Workspace {
   path: String,
-  dirs: Option<Vec<DirEntry>>,
-  files: Option<Vec<FileEntry>>,
+  dirs: Vec<DirEntry>,
+  files: Vec<FileEntry>,
 }
 
 #[derive(serde::Serialize)]
@@ -17,6 +17,12 @@ pub struct FileEntry {
   key: String,
   path: String,
   content: String,
+}
+
+impl Workspace {
+  pub fn new(path: String, dirs: Vec<DirEntry>, files: Vec<FileEntry>) -> Self {
+    Workspace { path: (path), dirs: (dirs), files: (files) }
+  }
 }
 
 impl DirEntry {
