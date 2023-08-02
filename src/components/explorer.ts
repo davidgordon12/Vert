@@ -1,16 +1,12 @@
 import { homeDir } from '@tauri-apps/api/path';
 import { open } from '@tauri-apps/api/dialog';
-import { openWorkspace, openFile } from "../ipc";
-
-export type Workspace = {
-  dirs: Array<DirEntry> | undefined
-  files: Array<FileEntry> | undefined
-};
+import { openDirectory, openFile } from "../ipc";
 
 export type DirEntry = {
   key: string,
   path: string,
-  children: Array<FileEntry> | undefined,
+  file_children: Array<FileEntry>,
+  dir_children: Array<DirEntry>,
 };
 
 export type FileEntry = {
