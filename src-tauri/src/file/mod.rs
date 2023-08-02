@@ -1,15 +1,11 @@
-#[derive(serde::Serialize)]
-pub struct Workspace {
-  path: String,
-  dirs: Vec<DirEntry>,
-  files: Vec<FileEntry>,
-}
+use std::fs::read_dir;
 
 #[derive(serde::Serialize)]
 pub struct DirEntry {
   key: String,
   path: String,
-  children: Vec<DirEntry>,
+  dir_children: Vec<DirEntry>,
+  file_children: Vec<FileEntry>,
 }
 
 #[derive(serde::Serialize)]
@@ -19,29 +15,10 @@ pub struct FileEntry {
   content: String,
 }
 
-impl Workspace {
-  pub fn new(path: String, dirs: Vec<DirEntry>, files: Vec<FileEntry>) -> Self {
-    Workspace { path: (path), dirs: (dirs), files: (files) }
-  }
-}
-
-impl DirEntry {
-  pub fn new(key: String, path: String, children: Vec<DirEntry>) -> Self {
-    DirEntry { key: (key), path: (path), children: (children) }
-  }
-}
-
-impl FileEntry {
-  pub fn new(key: String, path: String, content: String) -> Self {
-    FileEntry { key: (key), path: (path), content: (content) }
-  }
-}
-
 #[tauri::command]
-pub fn open_workspace(path: String) {
+pub fn open_directory(path: String) -> DirEntry {
 }
 
 #[tauri::command]
 pub fn open_file(path: String) -> FileEntry {
-  FileEntry::new(String::from("src"), String::from("C:\\David\\Source\\Repo\\Vert"), String::from("test"))
 }
